@@ -4,7 +4,7 @@ A local, encrypted password manager built with Python and PySide6.
 
 ## Features
 - Store credentials — title, username, password, and URL
-- AES encryption of all stored data
+- Encryption of all stored data
 - Master password + auto-lock on inactivity
 - Search across saved entries
 - One-click copy to clipboard
