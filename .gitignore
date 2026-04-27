@@ -1,0 +1,3 @@
+## Ignore files that contain sensitive information such as credentials and database files.
+*.json
+*.sqlite
