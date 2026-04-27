@@ -5,3 +5,4 @@
 2. Encrypt using AES (Secret Key to decrypt).
 3. Store using JSON. (Prootyope, will use SQL later).
 4. Make a system to retrieve the password.
+5. Generate strong password feature
