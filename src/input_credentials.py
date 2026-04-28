@@ -1,3 +1,4 @@
+## This file is used to input the credentials and save them to a json file.
 def input_credentials():
     import json
     
