@@ -11,25 +11,29 @@ def input_credentials():
     password = input()
     print("Enter the url for", title)
     url = input()
+    entry = {
+        "username": username,
+        "password": password,
+        "url": url
+    }
     # Check if credentials file is there
     if os.path.isfile("data.json") == False:
         credentials = {
-            title: {
-                "username": username,
-                "password": password,
-                "url": url
-            }
+            title: entry
         }
     else:
         with open('data.json', 'r') as saved_credentials:
-            credentials = json.load(saved_credentials)
-        credentials[title] = {
-                "username": username,
-                "password": password,
-                "url": url
-        }
+            saved_credentials.seek(0, 2) # Move pointer to end of file
+            if saved_credentials.tell() == 0:
+                credentials = {
+                    title: entry
+                }
+            else:
+                saved_credentials.seek(0, 0) # Move pointer to start of file
+                credentials = json.load(saved_credentials)
+                credentials.update({title : entry})
     ##open data.json to write and save credentials to the file
     with open('data.json', 'w') as saved_credentials:
-        json.dump(credentials, saved_credentials)
+        json.dump(credentials, saved_credentials, indent=4)
     
     print("Credentials saved successfully!")
