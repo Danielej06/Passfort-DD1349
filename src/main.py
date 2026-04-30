@@ -1,6 +1,7 @@
 ## This is the main file for the password manager application. It will handle the user input and save the credentials to a file aswell as retrieve the credentials.
 from read_credentials import read_credentials
 from input_credentials import input_credentials
+from loading import loading
 def main():
     while True:
         print("Welcome to the password manager!")
@@ -9,8 +10,12 @@ def main():
         print("3. Exit")
         choice = input("Please enter your choice: ")
         if choice == "1":
+            loading()
+            print("")
             input_credentials()
         elif choice == "2":
+            loading()
+            print("")
             read_credentials()
         elif choice == "3":
             print("Goodbye!")

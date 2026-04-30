@@ -1,9 +1,10 @@
 ## This file is used to input the credentials and save them to a json file.
+from loading import loading
 def input_credentials():
     import os
     import json
     
-    print("Enter the name of the credentials")
+    print("Enter the name of the credentials") ## This should be changed, kind of confused me. /Akanksh
     title = input()
     print("Enter the username for", title)
     username = input()
@@ -41,3 +42,5 @@ def input_credentials():
         json.dump(credentials, saved_credentials, indent=4)
     
     print("Credentials saved successfully!")
+    loading()
+    
