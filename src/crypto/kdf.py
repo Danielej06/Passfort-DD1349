@@ -3,7 +3,7 @@ from argon2.low_level import hash_secret_raw, Type
 
 
 # Denna fil är "Key derivation feature." Innehåller funktioner för att derivera master password
-# till en hash, som senare används med AES.
+# till en key, som senare används med AES.
 
 # Feel free att ändra dessa värden. La in dessa som initial eftersom de supposedly är balanced.
 # Hackers ska tycka det är jobbigt, men en user ska inte spendera 20 minuter för att hämta lösenord.
@@ -34,7 +34,8 @@ def derive_key(password: str, salt: bytes) -> bytes:
     )
     return key
 
+# Skapar en key från master password.
 def create_key_from_password (password: str) -> tuple[bytes, bytes]:
-    salt = generateSalt()
-    key = deriveKey(master_Password, salt)
+    salt = generate_salt()
+    key = derive_key(password, salt)
     return key, salt
