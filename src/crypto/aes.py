@@ -12,7 +12,7 @@ def generate_nonce() -> bytes:
 
     return secrets.token_bytes(12)    
 
-
+# Enkrypterar lösenordet. Returnerar en dictionary med ciphertext samt number used once (nonce).
 def encrypt(data: bytes, key: bytes) -> dict:
     nonce = generate_nonce()
     
@@ -26,7 +26,7 @@ def encrypt(data: bytes, key: bytes) -> dict:
     return encrypted_data
     
 
-
+# Dekrypterar ciphertexten. Inversen till "encrypt" funktionen. Returnerar lösenordet i läsbar text.
 def decrypt(payload: dict, key: bytes) -> bytes:
 
 
