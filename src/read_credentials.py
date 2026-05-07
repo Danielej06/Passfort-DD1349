@@ -15,15 +15,17 @@ def read_credentials(master_password):
         print(i, ". " , cr_name)
         i += 1
     
-    choice = input("Which one would you like to view: (Have to spell it out) ") 
-    if credentials[choice] == None : ## ISSUE: The "null" situation just crashes the code, needs to be fixed.
+    choice = input("Which one would you like to view: (Have to spell it out) ")
+    ## Check if the choice is valid, if not return to main menu. If it is valid, print the credentials.
+    try:        credentials[choice]
+    except KeyError:
         loading()
         print("Sorry there are no credentials saved under this name")
-    else :
-        loading()
-        print(credentials[choice])
+        return 
+    loading()
+    print(credentials[choice])
 
-    pass_option = input("Would you like to change your password? (y to change, anything else to not)") ## Current issue, code only accepts y and should also accept n, anything else should prompt an error
+    pass_option = input("Would you like to change your password? (y to change, anything else to not)") ## Current issue, code only accepts y and should also accept n, anything else should prompt an error (is this really necessary? maybe just accept y and that anything else should be treated as n)
     if pass_option == "y" :
         new_pass = input("Set your new password: ")
         loading()
