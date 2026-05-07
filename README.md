@@ -24,14 +24,14 @@ A local, encrypted password manager built with Python and PySide6.
 | Language | Python 3.x |
 | GUI | PySide6 |
 | Storage | SQLite (sqlite3) |
-| Encryption | cryptography |
+| Encryption | cryptography + argon|
 | Clipboard | pyperclip |
 | Generator / Strength | secrets + zxcvbn |
 
 ## Getting started
 ```sh
-pip install PySide6 cryptography pyperclip zxcvbn
-apt install python3-argon2
+apt install python3 ## If you don't have python yet.
+apt install python3-argon2 ##If you don't have the argon module
 cd src
 python3 main.py
 ```
