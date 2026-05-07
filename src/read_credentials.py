@@ -3,7 +3,7 @@ from crypto.vault import load_vault, save_vault
 from loading import loading
 
 def read_credentials(master_password):
-    ##Open the vault and read the contents to saved_credentials
+    ## Open the vault and read the contents to saved_credentials
     if load_vault(master_password) == {} : ## ISSUE: The "null" situation just crashes the code, needs to be fixed.
         print("Sorry there are no credentials saved yet. Returning to main menu.")
         return

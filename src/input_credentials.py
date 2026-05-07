@@ -1,8 +1,7 @@
-## This file is used to input the credentials and save them to the vault.
-from crypto.kdf import create_key_from_password
+## This file is used to input the credentials and save them to the vault. It will ask the user for the title of the credentials, the username, the password and the url. 
+## It will then save the credentials to the vault. If there is no vault, it will create one and then save the credentials to the vault.
 from crypto.vault import create_vault, load_vault, save_vault
 from loading import loading
-from crypto.aes import encrypt, decrypt
 def input_credentials(master_password):
     import os
     
