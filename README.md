@@ -5,12 +5,13 @@ A local, encrypted password manager built with Python and PySide6.
 ## Features
 - Store credentials — title, username, password, and URL
 - Encryption of all stored data
-- Master password + auto-lock on inactivity
+- Master password
 - Search across saved entries
 - One-click copy to clipboard
-- Built-in password generator
 
 ## Planned
+- Auto-lock on inactivity
+- Built-in password generator
 - SQLite storage with encrypted data at rest
 - Password strength indicator (zxcvbn)
 - Show/hide password toggle
@@ -30,5 +31,7 @@ A local, encrypted password manager built with Python and PySide6.
 ## Getting started
 ```sh
 pip install PySide6 cryptography pyperclip zxcvbn
-python main.py
+apt install python3-argon2
+cd src
+python3 main.py
 ```

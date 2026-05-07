@@ -1,11 +1,10 @@
-## This file is used to read one credential from the data.json file and print to the console.
+## This file is used to read one credential from the vault and print to the console aswell as changing the password.
+from crypto.vault import load_vault, save_vault
 from loading import loading
 
-def read_credentials():
-    import json
-    ##Open data.json and read to saved_credentials
-    with open('data.json', 'r') as saved_credentials:
-        credentials = json.load(saved_credentials)
+def read_credentials(master_password):
+    ##Open the vault and read the contents to saved_credentials
+    credentials = load_vault(master_password)
 
     i = 1
     print("Here are your saved credentials:")
@@ -26,8 +25,8 @@ def read_credentials():
         new_pass = input("Set your new password: ")
         loading()
         credentials[choice]["password"] = new_pass
-        with open('data.json', 'w') as file:
-            json.dump(credentials, file, indent = 4)
+        ##Save the new password to the vault
+        save_vault(credentials, master_password)
         print("Done, password changed!")
     else:
         loading()

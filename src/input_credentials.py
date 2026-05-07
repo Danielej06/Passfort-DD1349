@@ -1,8 +1,10 @@
-## This file is used to input the credentials and save them to a json file.
+## This file is used to input the credentials and save them to the vault.
+from crypto.kdf import create_key_from_password
+from crypto.vault import create_vault, load_vault, save_vault
 from loading import loading
-def input_credentials():
+from crypto.aes import encrypt, decrypt
+def input_credentials(master_password):
     import os
-    import json
     
     print("Enter the name of the credentials") ## This should be changed, kind of confused me. /Akanksh
     title = input()
@@ -34,13 +36,12 @@ def input_credentials():
             else:
                 ##Open data.json and read to saved_credentials
                 saved_credentials.seek(0, 0) # Move pointer to start of file
-                credentials = json.load(saved_credentials)
+                credentials = load_vault(master_password)
                 ## Update credentials with the new entry
                 credentials.update({title : entry})
-    ##Open data.json to write and save the newcredentials to the file
-    with open('data.json', 'w') as saved_credentials:
-        json.dump(credentials, saved_credentials, indent=4)
-    
+    ##Create vault if there is no vault, then save the credentials to the vault. If there is a vault, just save the credentials to the vault.
+    create_vault()
+    save_vault(credentials, master_password)
     print("Credentials saved successfully!")
     loading()
     

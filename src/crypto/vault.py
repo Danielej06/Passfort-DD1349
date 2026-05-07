@@ -1,9 +1,11 @@
+## This file is responsible for creating, saving and loading the vault. The vault is where all the credentials are stored. The vault is encrypted with the master password and can only be decrypted with the master password. 
+## The vault is stored in a file called data.json. The vault is a dictionary where the key is the title of the credential and the value is another dictionary with the username and password.
 import json
 import base64
 import os
 
-from kdf import derive_key, create_key_from_password
-from aes import encrypt, decrypt
+from crypto.aes import encrypt, decrypt
+from crypto.kdf import derive_key, create_key_from_password
 
 # Konvertera bytes till Base64 string.
 def bytes_to_base64(data: bytes) -> str:
