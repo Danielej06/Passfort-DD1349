@@ -1,6 +1,5 @@
 ## This is the main file for the password manager application. It will handle the user input and call on the required functions to read and write credentials to the vault.
-import os
-from crypto.vault import load_vault, vault_exists
+from crypto.vault import vault_exists
 from read_credentials import read_credentials
 from input_credentials import input_credentials
 from loading import loading

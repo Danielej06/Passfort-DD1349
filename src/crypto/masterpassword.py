@@ -1,10 +1,7 @@
 import sqlite3
-import base64
-import json
-from crypto import vault
 from crypto.aes import encrypt, decrypt
 from crypto.kdf import derive_key, create_key_from_password
-from crypto.vault import base64_to_bytes, bytes_to_base64, load_vault
+from crypto.vault import base64_to_bytes, bytes_to_base64
 con = sqlite3.connect("password.db")
 cur = con.cursor()
 
