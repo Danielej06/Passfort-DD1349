@@ -19,8 +19,8 @@ def base64_to_bytes(data: str) -> bytes:
     return base64.b64decode(data)
 # Skapar en empty vault
 def create_vault() -> dict:
-    SQL = "CREATE TABLE IF NOT EXISTS vault (id INTEGER PRIMARY KEY, URL TEXT," 
-    SQL += "username TEXT, cipheredpassword TEXT, salt TEXT, nonce TEXT)"
+    SQL = "CREATE TABLE IF NOT EXISTS vault (id INTEGER PRIMARY KEY, URL TEXT NOT NULL," 
+    SQL += "username TEXT NOT NULL, cipheredpassword TEXT NOT NULL, salt TEXT NOT NULL, nonce TEXT NOT NULL)"
     cur.execute(SQL)
     con.commit()
     return {}
@@ -58,14 +58,14 @@ def check_vault_accessible(password: str) -> bool:
         return False
 
 def load_urls() -> list:
-    SQL = "SELECT URL FROM vault"
+    SQL = "SELECT URL, username FROM vault"
     ## ISSUE: Fix so that it doesnt crash if there are no credentials saved yet, instead return an empty list and print a message in read_credentials.py that there are no credentials saved yet.
     res = cur.execute(SQL)
     rows = res.fetchall()
 
     urls = []
     for row in rows:
-        urls.append(row[0])
+        urls.append((row[0], row[1]))
 
     return urls
 

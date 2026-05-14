@@ -10,7 +10,7 @@ def create_master_password()-> str:
     key, salt = create_key_from_password(master_password)
     password_bytes = master_password.encode("utf-8")
     encrypted_payload = encrypt(password_bytes, key)
-    SQL = "CREATE TABLE IF NOT EXISTS masterpassword (id INTEGER PRIMARY KEY, cipheredpassword TEXT, salt TEXT, nonce TEXT)"
+    SQL = "CREATE TABLE IF NOT EXISTS masterpassword (id INTEGER PRIMARY KEY, cipheredpassword TEXT NOT NULL, salt TEXT NOT NULL, nonce TEXT NOT NULL)"
     cur.execute(SQL)
     con.commit()
     SQL = "INSERT INTO masterpassword (cipheredpassword, salt, nonce) VALUES ('"

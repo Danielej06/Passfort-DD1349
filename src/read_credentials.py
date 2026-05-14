@@ -12,7 +12,7 @@ def read_credentials(master_password):
     i = 1
     print("Here are your saved credentials:")
     for cr_name in urls:
-        print(i, ". " , cr_name)
+        print(i, ". URL: " , cr_name[0], "Username: " , cr_name[1])
         i += 1
     
     choice = input("Which number would you like to view: ")
