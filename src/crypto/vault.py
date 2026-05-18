@@ -31,10 +31,8 @@ def save_vault(vault: dict, password: str) -> None:
     password_bytes = vault["password"].encode("utf-8")
     encrypted_payload = encrypt(password_bytes, key)
 
-    SQL = "INSERT INTO vault (URL, username, cipheredpassword, salt, nonce) VALUES ('"
-    SQL += vault["url"] + "','" + vault["username"] + "','" + bytes_to_base64(encrypted_payload["ciphertext"]) 
-    SQL += "','" + bytes_to_base64(salt) + "','" + bytes_to_base64(encrypted_payload["nonce"]) + "')"
-    cur.execute(SQL)
+    SQL = "INSERT INTO vault (URL, username, cipheredpassword, salt, nonce) VALUES (?, ?, ?, ?, ?)"
+    cur.execute(SQL, (vault["url"], vault["username"], bytes_to_base64(encrypted_payload["ciphertext"]), bytes_to_base64(salt), bytes_to_base64(encrypted_payload["nonce"])))
     con.commit()
 
 def update_vault(vault: dict, password: str, id: int) -> None:
@@ -42,9 +40,8 @@ def update_vault(vault: dict, password: str, id: int) -> None:
     password_bytes = vault["password"].encode("utf-8")
     encrypted_payload = encrypt(password_bytes, key)
 
-    SQL = "UPDATE vault SET URL = '" + vault["url"] + "', username = '" + vault["username"] + "', cipheredpassword = '" + bytes_to_base64(encrypted_payload["ciphertext"]) 
-    SQL += "', salt = '" + bytes_to_base64(salt) + "', nonce = '" + bytes_to_base64(encrypted_payload["nonce"]) + "' WHERE ID = " + str(id)
-    cur.execute(SQL)
+    SQL = "UPDATE vault SET URL = ?, username = ?, cipheredpassword = ?, salt = ?, nonce = ? WHERE ID = ?"
+    cur.execute(SQL, (vault["url"], vault["username"], bytes_to_base64(encrypted_payload["ciphertext"]), bytes_to_base64(salt), bytes_to_base64(encrypted_payload["nonce"]), id))
     con.commit()
     
 def vault_exists() -> bool:
@@ -52,7 +49,7 @@ def vault_exists() -> bool:
 
 def check_vault_accessible(password: str) -> bool:
     try:
-        load_vault(password)
+        load_vault(password, 1)
         return True
     except Exception:
         return False
@@ -72,8 +69,8 @@ def load_urls() -> list:
 # Invers till save vault. Gör motsatt steg för att sedan ta fram faktiska dekrypterade vaulten.
 def load_vault(password: str, id: int) -> dict:
     
-    SQL = "SELECT url, username, cipheredpassword, salt, nonce FROM vault WHERE ID = '" + str(id) + "'"
-    res = cur.execute(SQL)
+    SQL = "SELECT url, username, cipheredpassword, salt, nonce FROM vault WHERE ID = ?"
+    res = cur.execute(SQL, (id,))
     rows = res.fetchall()
 
     if not rows:

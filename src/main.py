@@ -3,8 +3,11 @@ from crypto.vault import vault_exists
 from read_credentials import read_credentials
 from input_credentials import input_credentials
 from loading import loading
+from session_manager import SessionManager
 from crypto.masterpassword import create_master_password, verify_master_password
+
 def main():
+    session_manager = SessionManager()
     while True:
         print("Welcome to the password manager!")
         if not vault_exists():
@@ -12,13 +15,26 @@ def main():
             master_password = create_master_password()
             loading()
         else:
-            print("First you will have to enter your master password to access your credentials.")
-            master_password = input("Enter your master password: ")
-            loading()
-            if not verify_master_password(master_password):
-                print("Incorrect master password or corrupted vault file, please try again.")
-                continue
-            print("Master password accepted!")
+            ## Check if there isn't a started session or if it has expired. If any of these are true, log the user out and ask for the master password again. If it hasn't, continue with the program.
+            if not session_manager.started:
+                print("First you will have to enter your master password to access your credentials.")
+                master_password = input("Enter your master password: ")
+                loading()
+                if not verify_master_password(master_password):
+                    print("Incorrect master password or corrupted vault file, please try again.")
+                    continue
+                print("Master password accepted!")
+                session_manager.session_started()
+            elif session_manager.session_state_expiry():
+               print("You have been logged out due to inactivity. Please enter your master password to log in again.")
+               master_password = input("Enter your master password: ")
+               loading()
+               if not verify_master_password(master_password):
+                   print("Incorrect master password or corrupted vault file, please try again.")
+                   continue
+               print("Master password accepted!")
+               session_manager.session_started()
+
         print("What would you like to do?")
         print("1. Add new credentials")
         print("2. View saved credentials")
