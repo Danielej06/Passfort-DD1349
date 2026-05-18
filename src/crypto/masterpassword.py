@@ -1,50 +1,47 @@
-import hmac
-import os
 import sqlite3
-from crypto.kdf import derive_key
+from crypto.aes import encrypt, decrypt
+from crypto.kdf import derive_key, create_key_from_password
 from crypto.vault import base64_to_bytes, bytes_to_base64
-
 con = sqlite3.connect("password.db")
 cur = con.cursor()
 
-def create_master_password()-> str:
-    master_password = input("Enter your master password: ")
-    # Two independent salts that make it safer to verify the master password without risking the security of the vault.
-    # The verify_salt is used to create a key that is stored in the database and used to verify the master password. 
-    # The enc_salt is used to create a key that is used to encrypt and decrypt the vault.
-    verify_salt = os.urandom(16)
-    enc_salt = os.urandom(16)
-    
-    verify_key = derive_key(master_password, verify_salt)
-    
-    SQL = """CREATE TABLE IF NOT EXISTS masterpassword (
-        id INTEGER PRIMARY KEY,
-        verify_key TEXT NOT NULL,
-        verify_salt TEXT NOT NULL,
-        enc_salt TEXT NOT NULL)"""
+def create_master_password(master_password=None)-> str:
+    if master_password is None:
+        master_password = input("Enter your master password: ")
+    key, salt = create_key_from_password(master_password)
+    password_bytes = master_password.encode("utf-8")
+    encrypted_payload = encrypt(password_bytes, key)
+    SQL = "CREATE TABLE IF NOT EXISTS masterpassword (id INTEGER PRIMARY KEY, cipheredpassword TEXT NOT NULL, salt TEXT NOT NULL, nonce TEXT NOT NULL)"
     cur.execute(SQL)
     con.commit()
-    SQL = "INSERT INTO masterpassword (verify_key, verify_salt, enc_salt) VALUES ('"
-    SQL += bytes_to_base64(verify_key) + "','" + bytes_to_base64(verify_salt) + "','" + bytes_to_base64(enc_salt) + "')"
+    SQL = "INSERT INTO masterpassword (cipheredpassword, salt, nonce) VALUES ('"
+    SQL += bytes_to_base64(encrypted_payload["ciphertext"]) 
+    SQL += "','" + bytes_to_base64(salt) + "','" + bytes_to_base64(encrypted_payload["nonce"]) + "')"
     cur.execute(SQL)
     con.commit()
     print("Master password created successfully!")
     return master_password
 
 def verify_master_password(master_password)-> bool:
-    SQL = "SELECT * FROM masterpassword"
-    cur.execute(SQL)
-    row = cur.fetchone()
-    if not row:
+    try:
+        SQL = "SELECT * FROM masterpassword"
+        cur.execute(SQL)
+        row = cur.fetchone()
+        if not row:
+            return False
+        encrypted_password = base64_to_bytes(row[1])
+        salt = base64_to_bytes(row[2])
+        nonce = base64_to_bytes(row[3])
+        
+        encrypted_payload = {
+        "nonce": nonce,
+        "ciphertext": encrypted_password,
+        }
+        
+        key = derive_key(master_password, salt)
+        
+        password_bytes = decrypt(encrypted_payload, key)
+        retreived_password = password_bytes.decode("utf-8")
+        return retreived_password == master_password
+    except Exception:
         return False
-    stored_verify_key = base64_to_bytes(row[1])
-    verify_salt = base64_to_bytes(row[2])
-    enc_salt = base64_to_bytes(row[3])
-    
-    possible_key = derive_key(master_password, verify_salt)
-    
-    # Use hmac.compare_digest to prevent timing attacks. This will return False if the keys are not the same, and True if they are the same.
-    if not hmac.compare_digest(possible_key, stored_verify_key):
-        return None
-    
-    return derive_key(master_password, enc_salt)

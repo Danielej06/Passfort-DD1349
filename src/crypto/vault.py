@@ -98,4 +98,3 @@ def load_vault(password: str, id: int) -> dict:
         }
 
     return vaults
-
