@@ -2,7 +2,7 @@
 # Detta är ett tillägg som är nödvändigt för att säkerställa säkerheten av programmet.
 import time
 # 2 minuter av inactivity innan man loggas ut
-LOGOUT_TIME = 5 
+LOGOUT_TIME = 120
 
 # Återställer timern. Detta ska ske varje gång användaren interagerar. Denna används bara för första.
 USER_ACTIVE = time.time()
