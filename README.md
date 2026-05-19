@@ -1,6 +1,7 @@
 # 🔐 Passfort
 
-A local, encrypted password manager built with Python and PySide6. All credentials are stored on your machine — no cloud, no third-party servers.
+A local, encrypted password manager built with Python and Tkinter. All credentials are stored on your machine — no cloud, no third-party servers.
+
 
 ---
 
