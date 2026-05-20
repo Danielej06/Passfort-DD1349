@@ -14,9 +14,8 @@ def create_master_password(master_password=None)-> str:
     SQL = "CREATE TABLE IF NOT EXISTS masterpassword (id INTEGER PRIMARY KEY, cipheredpassword TEXT NOT NULL, salt TEXT NOT NULL, nonce TEXT NOT NULL)"
     cur.execute(SQL)
     con.commit()
-    SQL = "INSERT INTO masterpassword (cipheredpassword, salt, nonce) VALUES ('"
-    SQL += bytes_to_base64(encrypted_payload["ciphertext"]) 
-    SQL += "','" + bytes_to_base64(salt) + "','" + bytes_to_base64(encrypted_payload["nonce"]) + "')"
+    SQL = "INSERT INTO masterpassword (verify_key, verify_salt, enc_salt) VALUES (?, ?, ?)"
+    cur.execute(SQL, (bytes_to_base64(verify_key), bytes_to_base64(verify_salt), bytes_to_base64(enc_salt)))
     cur.execute(SQL)
     con.commit()
     print("Master password created successfully!")
